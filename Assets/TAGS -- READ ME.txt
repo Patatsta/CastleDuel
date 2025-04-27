@@ -1,0 +1,7 @@
+TAGS USED IN PROJECT
+===================================
+The following tags should be set up in the project, but if they are not, please add them in the following order. Thank you!
+
+Tag0	Obstacle
+Tag1	LabItem
+Tag2	Hazard
