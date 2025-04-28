@@ -29,11 +29,12 @@ public class Cannon : MonoBehaviour
     [SerializeField] private float _maxForce;
     [SerializeField] private float _minForce;
     [SerializeField] private float _chargeMultiplier;
-
+    [SerializeField] private ParticleSystem _particleSystem;
     private void Start()
-    {
+    { 
         _ball = _ballPrefab.GetComponentInChildren<Cannonball>();
         _force = 20f;
+        _particleSystem.Stop();
     }
     void Update()
     {
@@ -77,13 +78,13 @@ public class Cannon : MonoBehaviour
     {
 
         if (Input.GetKeyUp(KeyCode.Space))
-        {
-            print(gameObject.name);
+        {         
             CameraManager.Instance.ChangePlayer();
             GameObject ball = Instantiate(_ballPrefab, _shotPoint.position, Quaternion.identity);
             Cannonball bscript = ball.GetComponentInChildren<Cannonball>();
             bscript.CannonShot(_shotPoint.forward * _force);
             _physics.SimulatedEnd();
+            _particleSystem.Play();
         }
     }
 

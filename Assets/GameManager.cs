@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -65,13 +66,25 @@ public class GameManager : MonoBehaviour
 
         if(_P1HP <= 300)
         {
-            Debug.Log("P1Win");
+            CanvasManager.Instance.EndGame("Player 1 Wins!");
+            StartCoroutine(PlayAgain());
         }
         if(_P2HP <= 300)
         {
-            Debug.Log("P2Win");
+            CanvasManager.Instance.EndGame("Player 2 Wins!");
+            StartCoroutine(PlayAgain());
         }
     }
 
 
+    public void QuitButton()
+    {
+        Application.Quit();
+    }
+
+    IEnumerator PlayAgain()
+    {
+        yield return new WaitForSeconds(5);
+        SceneManager.LoadScene(0);
+    }
 }

@@ -21,7 +21,7 @@ public class CameraManager : MonoBehaviour
 
     [SerializeField] private CinemachineVirtualCamera _p1Cam;
     [SerializeField] private CinemachineVirtualCamera _p2Cam;
-    [SerializeField] private CinemachineVirtualCamera _neutalCam;
+    [SerializeField] private CinemachineVirtualCamera _neutralCam;
 
     private bool _isPlayer1Turn = true; 
 
@@ -37,9 +37,7 @@ public class CameraManager : MonoBehaviour
 
         _p1Cam.Priority = 0;
         _p2Cam.Priority = 0;
-        _neutalCam.Priority = 10;
-
-        StartCoroutine(SwitchPlayer());
+        _neutralCam.Priority = 10;
     }
 
     IEnumerator SwitchPlayer()

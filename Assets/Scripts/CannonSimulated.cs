@@ -11,10 +11,10 @@ public class CannonSimulated : MonoBehaviour
     [SerializeField] private LineRenderer _line;
     [SerializeField] private int _maxInteractions = 30;
     [SerializeField] private float simulationStep = 0.05f;
-
+   
     private void Start()
     {  
-      
+       
         _line.enabled = false;
     }
 
