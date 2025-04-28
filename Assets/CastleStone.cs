@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class CastleStone : MonoBehaviour
 {
-    [SerializeField] private int _blockID;
+    public int ID;
     private bool _isTriggered = false;
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.CompareTag("Floor") && !_isTriggered)
         {
+           
             _isTriggered = true;
-            GameManager.OnHitFloor?.Invoke(_blockID);
+            GameManager.OnHitFloor?.Invoke(ID);
         }
     }
 }
