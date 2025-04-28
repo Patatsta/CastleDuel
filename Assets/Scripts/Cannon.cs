@@ -19,7 +19,8 @@ public class Cannon : MonoBehaviour
     private float currentBaseRotation = 0f;
     private float currentBarrelRotation = 0f;
 
-    [SerializeField] private Cannonball _ballPrefab;
+    [SerializeField] private GameObject _ballPrefab;
+    private Cannonball _ball;
     [SerializeField] private Transform _shotPoint;
     [SerializeField] private float _force;
     [SerializeField] private CannonSimulated _physics;
@@ -28,11 +29,22 @@ public class Cannon : MonoBehaviour
     [SerializeField] private float _maxForce;
     [SerializeField] private float _minForce;
     [SerializeField] private float _chargeMultiplier;
+
     private void Start()
     {
+        _ball = _ballPrefab.GetComponentInChildren<Cannonball>();
         _force = 20f;
     }
     void Update()
+    {
+
+        Charge();
+        Shoot();
+        MoveCanon();
+        
+    }
+
+    public void Charge()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -58,34 +70,52 @@ public class Cannon : MonoBehaviour
                 _force -= 50 * Time.deltaTime;
             }
         }
-        
+
+    }
+
+    public void Shoot()
+    {
 
         if (Input.GetKeyUp(KeyCode.Space))
         {
-            Cannonball ball = Instantiate(_ballPrefab, _shotPoint.position, Quaternion.identity);
-            ball.CannonShot(_shotPoint.forward * _force);
+            print(gameObject.name);
+            CameraManager.Instance.ChangePlayer();
+            GameObject ball = Instantiate(_ballPrefab, _shotPoint.position, Quaternion.identity);
+            Cannonball bscript = ball.GetComponentInChildren<Cannonball>();
+            bscript.CannonShot(_shotPoint.forward * _force);
             _physics.SimulatedEnd();
         }
+    }
 
-      
+    public void MoveCanon()
+    {
         float horizontalInput = Input.GetAxis("Horizontal");
         currentBaseRotation += horizontalInput * baseRotationSpeed * Time.deltaTime;
         currentBaseRotation = Mathf.Clamp(currentBaseRotation, baseMinRotation, baseMaxRotation);
         baseTransform.localRotation = Quaternion.Euler(0f, currentBaseRotation, 0f);
 
-      
+
         float verticalInput = Input.GetAxis("Vertical");
-        currentBarrelRotation -= verticalInput * barrelRotationSpeed * Time.deltaTime; 
+        currentBarrelRotation -= verticalInput * barrelRotationSpeed * Time.deltaTime;
         currentBarrelRotation = Mathf.Clamp(currentBarrelRotation, barrelMinAngle, barrelMaxAngle);
         barrelTransform.localRotation = Quaternion.Euler(currentBarrelRotation, 0f, 0f);
     }
+
     private void FixedUpdate()
     {
+      
+
         if (Input.GetKey(KeyCode.Space))
         {
-            _physics.SimulatedTrajectory(_ballPrefab, _shotPoint.position, _shotPoint.forward * _force);
+            _physics.SimulatedTrajectory(_ball, _shotPoint.position, _shotPoint.forward * _force);
         }
     }
+
+    public void Activate(bool status)
+    {
+        this.enabled = status;
+    }
+
 }
 
 

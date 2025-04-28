@@ -5,7 +5,8 @@ using UnityEngine;
 public class Cannonball : MonoBehaviour
 {
     private Rigidbody rb;
-  
+    [SerializeField] private GameObject _cam;
+
     public void Init()
     {
         rb = GetComponent<Rigidbody>();
@@ -16,5 +17,10 @@ public class Cannonball : MonoBehaviour
     {
         if (rb == null) Init();
         rb.AddForce(force, ForceMode.Impulse);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Destroy(_cam);
     }
 }
