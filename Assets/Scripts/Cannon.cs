@@ -78,8 +78,9 @@ public class Cannon : MonoBehaviour
     {
 
         if (Input.GetKeyUp(KeyCode.Space))
-        {         
-            CameraManager.Instance.ChangePlayer();
+        {
+            DestructionManager.Instance.StartChecking();
+            CameraManager.Instance.DeactivatePlayers();
             GameObject ball = Instantiate(_ballPrefab, _shotPoint.position, Quaternion.identity);
             Cannonball bscript = ball.GetComponentInChildren<Cannonball>();
             bscript.CannonShot(_shotPoint.forward * _force);

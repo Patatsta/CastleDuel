@@ -44,8 +44,7 @@ public class GameManager : MonoBehaviour
         _p1Slider.value = _P1HP;
         _p2Slider.value = _P2HP;
       
-        _p1Slider.minValue = 300;
-        _p2Slider.minValue = 300;
+       
         OnHitFloor = AddPoints;
     }
 
@@ -68,11 +67,13 @@ public class GameManager : MonoBehaviour
         {
             CanvasManager.Instance.EndGame("Player 1 Wins!");
             StartCoroutine(PlayAgain());
+            CameraManager.Instance.EndGameCamera();
         }
         if(_P2HP <= 300)
         {
             CanvasManager.Instance.EndGame("Player 2 Wins!");
             StartCoroutine(PlayAgain());
+            CameraManager.Instance.EndGameCamera();
         }
     }
 

@@ -23,8 +23,9 @@ public class CameraManager : MonoBehaviour
     [SerializeField] private CinemachineVirtualCamera _p2Cam;
     [SerializeField] private CinemachineVirtualCamera _neutralCam;
 
-    private bool _isPlayer1Turn = true; 
+    private bool _isPlayer1Turn = false;
 
+    private Coroutine _changeCoro;
     private void Awake()
     {
         _instance = this;
@@ -40,8 +41,19 @@ public class CameraManager : MonoBehaviour
         _neutralCam.Priority = 10;
     }
 
-    IEnumerator SwitchPlayer()
+    public void DeactivatePlayers()
     {
+    
+       _player1.Activate(false);
+    
+       _player2.Activate(false);
+        
+    }
+    IEnumerator SwitchPlayer(float delay)
+    {
+        
+        yield return new WaitForSeconds(delay);
+
         _p1Cam.Priority = 0;
         _p2Cam.Priority = 0;
 
@@ -67,8 +79,37 @@ public class CameraManager : MonoBehaviour
     }
     public void ChangePlayer()
     {
-        StartCoroutine(SwitchPlayer());
+       _changeCoro =  StartCoroutine(SwitchPlayer(1));
     }
 
-    
+    public void EndGameCamera()
+    {
+        _player1.Activate(false);
+        _player2.Activate(false);
+
+        _p1Cam.Priority = 0;
+        _p2Cam.Priority = 0;
+        _neutralCam.Priority = 10;
+    }
+
+    public void StartGameManager()
+    {
+        if (_isPlayer1Turn)
+        {
+            _player1.Activate(false);
+            _player2.Activate(true);
+            _p1Cam.Priority = 0;
+            _p2Cam.Priority = 20;
+
+        }
+        else
+        {
+            _player1.Activate(true);
+            _player2.Activate(false);
+            _p1Cam.Priority = 20;
+            _p2Cam.Priority = 0;
+        }
+
+        _isPlayer1Turn = !_isPlayer1Turn;
+    }    
 }
