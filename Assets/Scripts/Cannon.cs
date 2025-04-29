@@ -83,7 +83,7 @@ public class Cannon : MonoBehaviour
             CameraManager.Instance.DeactivatePlayers();
             GameObject ball = Instantiate(_ballPrefab, _shotPoint.position, Quaternion.identity);
             Cannonball bscript = ball.GetComponentInChildren<Cannonball>();
-            bscript.CannonShot(_shotPoint.forward * _force);
+            bscript.CannonShot(_shotPoint.forward * _force, GameManager.Instance.CurrentBallVariant());
             _physics.SimulatedEnd();
             _particleSystem.Play();
         }

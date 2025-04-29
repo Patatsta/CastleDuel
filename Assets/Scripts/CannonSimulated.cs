@@ -33,8 +33,8 @@ public class CannonSimulated : MonoBehaviour
 
         SceneManager.MoveGameObjectToScene(simulatedObj.gameObject, SceneCreator.Instance._simulatedScene);
 
-        simulatedObj.Init();
-        simulatedObj.CannonShot(velocity);
+        simulatedObj.Init(0);
+        simulatedObj.CannonShot(velocity, 1);
 
         _line.positionCount = _maxInteractions;
 

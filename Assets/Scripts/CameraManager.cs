@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using Unity.VisualScripting;
 public class CameraManager : MonoBehaviour
 {
     private static CameraManager _instance;
@@ -24,8 +25,8 @@ public class CameraManager : MonoBehaviour
     [SerializeField] private CinemachineVirtualCamera _neutralCam;
 
     private bool _isPlayer1Turn = false;
-
-    private Coroutine _changeCoro;
+    private Coroutine _toNeutral;
+ 
     private void Awake()
     {
         _instance = this;
@@ -47,17 +48,26 @@ public class CameraManager : MonoBehaviour
        _player1.Activate(false);
     
        _player2.Activate(false);
-        
-    }
-    IEnumerator SwitchPlayer(float delay)
-    {
-        
-        yield return new WaitForSeconds(delay);
 
+        _toNeutral = StartCoroutine(SwitchCamToNeutral());
+    }
+
+    IEnumerator SwitchCamToNeutral()
+    {
+        yield return new WaitForSeconds(2);
         _p1Cam.Priority = 0;
         _p2Cam.Priority = 0;
+    }
+    IEnumerator SwitchPlayer()
+    {
 
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(1);
+
+        if (GameManager.Instance._gameEnd)
+            StopAllCoroutines();
+
+        if(_toNeutral != null) 
+            StopCoroutine( _toNeutral );
 
         if (_isPlayer1Turn)
         {
@@ -79,7 +89,7 @@ public class CameraManager : MonoBehaviour
     }
     public void ChangePlayer()
     {
-       _changeCoro =  StartCoroutine(SwitchPlayer(1));
+       StartCoroutine(SwitchPlayer());
     }
 
     public void EndGameCamera()

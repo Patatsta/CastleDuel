@@ -1,12 +1,27 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    private static GameManager _instance;
+    public static GameManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+                Debug.Log("GameManager == Null");
+
+            return _instance;
+
+        }
+    }
+
+
     public static Action<int> OnHitFloor;
 
     private List<CastleStone> _p1Stones = new List<CastleStone>();
@@ -18,10 +33,38 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Slider _p1Slider;
     [SerializeField] private Slider _p2Slider;
 
+    private int _currentBallVariant;
+    private int _ballIndex = 0;
+    public bool _gameEnd = false;
+
+    [SerializeField] private int _loseThreshold;
+    private void Awake()
+    {
+        _instance = this;
+    }
+
+    
+    public int CurrentBallVariant()
+    {
+       
+        print("ballIndex" + _ballIndex);
+        if(_ballIndex >= 2)
+        {
+            print("BallChangeTo" + _currentBallVariant);
+            _currentBallVariant = UnityEngine.Random.Range(0, 3);
+            _ballIndex = 0;
+        }
+        _ballIndex++;
+        return _currentBallVariant;
+    }
+
     IEnumerator Start()
     {
-        yield return null; // Warte 1 Frame, bis alle anderen Starts durchgelaufen sind
+        yield return null;
 
+
+        _currentBallVariant = UnityEngine.Random.Range(0, 3);
+    
         CastleStone[] allStones = GameObject.FindObjectsOfType<CastleStone>();
         Debug.Log("Found stones: " + allStones.Length);
 
@@ -42,6 +85,10 @@ public class GameManager : MonoBehaviour
 
         _p1Slider.maxValue = _P1HP;
         _p2Slider.maxValue = _P2HP;
+
+        _p1Slider.minValue = _loseThreshold;
+        _p2Slider.minValue = _loseThreshold;
+
         _p1Slider.value = _P1HP;
         _p2Slider.value = _P2HP;
 
@@ -64,15 +111,17 @@ public class GameManager : MonoBehaviour
             _p2Slider.value = _P2HP;
         }
 
-        if(_P1HP <= 300)
+        if(_P1HP <= _loseThreshold)
         {
-            CanvasManager.Instance.EndGame("Player 1 Wins!");
+            _gameEnd = true;
+            CanvasManager.Instance.EndGame("Player 2 Wins!");
             StartCoroutine(PlayAgain());
             CameraManager.Instance.EndGameCamera();
         }
-        if(_P2HP <= 300)
+        if(_P2HP <= _loseThreshold)
         {
-            CanvasManager.Instance.EndGame("Player 2 Wins!");
+            _gameEnd = true;
+            CanvasManager.Instance.EndGame("Player 1 Wins!");
             StartCoroutine(PlayAgain());
             CameraManager.Instance.EndGameCamera();
         }

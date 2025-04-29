@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Cannonball : MonoBehaviour
@@ -20,34 +21,34 @@ public class Cannonball : MonoBehaviour
 
     private _ballType _ball;
 
-    public void Init()
+    public void Init(int variant)
     {
         _renderer = GetComponent<Renderer>();
         rb = GetComponent<Rigidbody>();
-        int random = Random.Range(0,3);
+        
      
-        if (random == 0)
+        if (variant == 0)
         {
-            _renderer.material = _materials[random];
+            _renderer.material = _materials[variant];
             _ball = _ballType.Normal;
         }
-        else if (random == 1)
+        else if (variant == 1)
         {
-            _renderer.material = _materials[random];
+            _renderer.material = _materials[variant];
             _ball = _ballType.Increase;
         }
-        else if (random == 2)
+        else if (variant == 2)
         {
-            _renderer.material = _materials[random];
+            _renderer.material = _materials[variant];
             _ball = _ballType.Explosive;
         }
 
     }
 
       
-    public void CannonShot(Vector3 force)
+    public void CannonShot(Vector3 force, int variant)
     {
-        if (rb == null) Init();
+        if (rb == null) Init(variant);
         rb.AddForce(force, ForceMode.Impulse);
     }
 

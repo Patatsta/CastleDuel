@@ -25,15 +25,17 @@ public class DestructionManager : MonoBehaviour
             StartCoroutine(CheckDestructionDone());
     }
 
+    private float _maxTimer = 0;
+
     private IEnumerator CheckDestructionDone()
     {
         _checking = true;
 
-        yield return new WaitForSeconds(2f); 
-
+        yield return new WaitForSeconds(2f);
+        _maxTimer = 0;
         while (true)
         {
-           
+            
             int sleeping = 0;
 
             foreach (var stone in _trackedStones)
@@ -44,14 +46,20 @@ public class DestructionManager : MonoBehaviour
             }
 
             float sleepRatio = (float)sleeping / _trackedStones.Count;
-            print(sleepRatio);
-            if (sleepRatio >= 0.95f) 
+            //print(sleepRatio);
+            if (sleepRatio >= 0.8f) 
             {
                 CameraManager.Instance.ChangePlayer();
                 break;
             }
 
-            yield return new WaitForSeconds(0.5f); 
+            yield return new WaitForSeconds(0.5f);
+            _maxTimer += 0.5f;
+            if(_maxTimer >= 5)
+            {
+                CameraManager.Instance.ChangePlayer();
+                break;
+            }
         }
 
         _checking = false;
