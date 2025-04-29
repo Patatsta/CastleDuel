@@ -5,24 +5,21 @@ using UnityEngine.SceneManagement;
 
 public class CannonSimulated : MonoBehaviour
 {
-   
-
-
-    [SerializeField] private LineRenderer _line;
+    [SerializeField] private GameObject pointPrefab;
     [SerializeField] private int _maxInteractions = 30;
     [SerializeField] private float simulationStep = 0.05f;
-   
+
+    private List<GameObject> _points = new List<GameObject>();
+
     private void Start()
-    {  
-       
-        _line.enabled = false;
+    {
+        ClearPoints();
     }
-
-
 
     public void SimulatedTrajectory(Cannonball ball, Vector3 pos, Vector3 velocity)
     {
-        _line.enabled = true;
+        ClearPoints();
+
         var simulatedObj = Instantiate(ball, pos, Quaternion.identity);
         simulatedObj.GetComponent<Renderer>().enabled = false;
 
@@ -36,12 +33,11 @@ public class CannonSimulated : MonoBehaviour
         simulatedObj.Init(0);
         simulatedObj.CannonShot(velocity, 1);
 
-        _line.positionCount = _maxInteractions;
-
         for (int i = 0; i < _maxInteractions; i++)
         {
             SceneCreator.Instance._physicsScene.Simulate(simulationStep);
-            _line.SetPosition(i, simulatedObj.transform.position);
+            GameObject point = Instantiate(pointPrefab, simulatedObj.transform.position, Quaternion.identity, transform);
+            _points.Add(point);
         }
 
         Destroy(simulatedObj.gameObject);
@@ -49,6 +45,17 @@ public class CannonSimulated : MonoBehaviour
 
     public void SimulatedEnd()
     {
-        _line.enabled = false;
+        ClearPoints();
+    }
+
+    private void ClearPoints()
+    {
+        foreach (var point in _points)
+        {
+            if (point != null)
+                Destroy(point);
+        }
+        _points.Clear();
     }
 }
+

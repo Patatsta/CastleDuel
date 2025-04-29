@@ -30,8 +30,11 @@ public class Cannon : MonoBehaviour
     [SerializeField] private float _minForce;
     [SerializeField] private float _chargeMultiplier;
     [SerializeField] private ParticleSystem _particleSystem;
+
+    private AudioSource _audioSource;
     private void Start()
     { 
+        _audioSource = GetComponent<AudioSource>();
         _ball = _ballPrefab.GetComponentInChildren<Cannonball>();
         _force = 20f;
         _particleSystem.Stop();
@@ -64,12 +67,14 @@ public class Cannon : MonoBehaviour
             }
             if (_isForce)
             {
-                _force += 50 * Time.deltaTime;
+                _force += _chargeMultiplier * Time.deltaTime;
             }
             else
             {
-                _force -= 50 * Time.deltaTime;
+                _force -= _chargeMultiplier * Time.deltaTime;
             }
+
+            print(_force);
         }
 
     }
@@ -79,6 +84,7 @@ public class Cannon : MonoBehaviour
 
         if (Input.GetKeyUp(KeyCode.Space))
         {
+            _audioSource.Play();
             DestructionManager.Instance.StartChecking();
             CameraManager.Instance.DeactivatePlayers();
             GameObject ball = Instantiate(_ballPrefab, _shotPoint.position, Quaternion.identity);

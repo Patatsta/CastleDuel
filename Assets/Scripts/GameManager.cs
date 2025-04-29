@@ -46,11 +46,9 @@ public class GameManager : MonoBehaviour
     
     public int CurrentBallVariant()
     {
-       
-        print("ballIndex" + _ballIndex);
+
         if(_ballIndex >= 2)
         {
-            print("BallChangeTo" + _currentBallVariant);
             _currentBallVariant = UnityEngine.Random.Range(0, 3);
             _ballIndex = 0;
         }
@@ -95,7 +93,7 @@ public class GameManager : MonoBehaviour
         OnHitFloor = AddPoints;
     }
 
-
+ 
     private void AddPoints(int id)
     {
         if(id == 1)
@@ -127,6 +125,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            SceneManager.LoadScene(0);
+        }
+    }
 
     public void QuitButton()
     {

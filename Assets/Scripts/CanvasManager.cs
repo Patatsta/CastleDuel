@@ -31,10 +31,12 @@ public class CanvasManager : MonoBehaviour
         _startCanvas.SetActive(true);
         _gameCanvas.SetActive(false);
         _endCanvas.SetActive(false);
+        Cursor.lockState = CursorLockMode.None;
     }
 
     public void StartedGame()
     {
+        Cursor.lockState = CursorLockMode.Locked;
         _startCanvas.SetActive(false);
         _gameCanvas.SetActive(true);
     }
